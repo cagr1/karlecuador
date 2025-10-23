@@ -4,7 +4,7 @@ export let products = [
         name: 'Black kr19',
         category: 'Pistolas',
         description: 'Pistola semiautomática de alta capacidad con diseño ergonómico',
-        image: '/src/assets/products/kra9_black_Web.png',
+        image: '/products/kra9_black_Web.png',
         price: 1000,
         stock: 10,
         
@@ -33,7 +33,7 @@ export let products = [
     name: 'Black kr19 PRO',
     category: 'Pistolas',
     description: 'Pistola semiautomática de alta capacidad c',
-    image: '/src/assets/products/kra9_Black_pro_Web.png',
+    image: '/products/kra9_Black_pro_Web.png',
     price: 1200,
     stock: 10,
     
