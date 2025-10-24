@@ -92,14 +92,12 @@
 import { ref, computed, onMounted } from 'vue'
 import { products } from '@/data/products'
 import ProductCard from '@/components/shared/ProductCard.vue'
+import ProductModal from '@/components/shared/ProductModal.vue'
 
 const activeFilter = ref('Todos')
-const productDetails = ref(null)
-
-const categories = computed(() => {
-  const allCategories = ['Todos', ...new Set(products.map(product => product.category))]
-  return allCategories
-})
+const selectedProduct = ref(null)
+const showProductModal = ref(false)
+const showAdmin = ref(false)
 
 const filteredProducts = computed(() => {
   if (activeFilter.value === 'Todos') {
@@ -108,12 +106,15 @@ const filteredProducts = computed(() => {
   return products.filter(product => product.category === activeFilter.value)
 })
 
-const setFilter = (category) => {
-  activeFilter.value = category
+const showProductDetails = (product) => {
+  selectedProduct.value = product
+  showProductModal.value = true
+  console.log('Mostrando detalles de:', product.name) // Para debug
 }
 
-const showProductDetails = (product) => {
-  productDetails.value = product
+const closeProductModal = () => {
+  showProductModal.value = false
+  selectedProduct.value = null
 }
 
 // Exponer función para que Header pueda acceder
