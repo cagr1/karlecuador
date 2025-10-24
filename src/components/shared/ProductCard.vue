@@ -6,9 +6,7 @@
         :alt="product.name"
         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
       >
-      <div class="absolute top-3 right-3 bg-orange-500 text-white px-2 py-1 rounded text-sm font-semibold">
-        ${{ product.price }}
-      </div>
+      
     </div>
     <div class="p-6">
       <div class="text-xs text-orange-500 font-semibold mb-2">{{ product.category }}</div>
@@ -25,7 +23,7 @@
       </div>
 
       <div class="flex items-center justify-between">
-        <span class="text-sm text-zinc-500">{{ product.specs.capacity || product.specs.system }}</span>
+        
         <button 
           @click="$emit('viewDetails', product)"
           class="text-orange-500 hover:text-orange-400 text-sm font-semibold flex items-center gap-1"

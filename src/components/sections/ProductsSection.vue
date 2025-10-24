@@ -3,7 +3,9 @@
     <div class="container mx-auto px-4">
       <div class="text-center mb-16">
         <h2 class="text-4xl md:text-5xl font-bold mb-4">Nuestros Productos</h2>
-        <p class="text-zinc-400 text-lg">Calidad turca, precisión mundial</p>
+        <p class="text-zinc-400 max-w-2xl mx-auto">
+          Descubre nuestra línea completa de armas de alta calidad, diseñadas para cumplir con los más altos estándares de precisión y confiabilidad.
+        </p>
         
         <!-- Botón admin (puedes ocultarlo o protegerlo) -->
         <!-- <button 
@@ -13,14 +15,30 @@
           Gestionar Productos
         </button> -->
       </div>
-
+      
+      <!-- <div class="flex flex-wrap justify-center gap-4 mb-8">
+        <button 
+          v-for="category in categories" 
+          :key="category"
+          @click="setFilter(category)"
+          :class="[
+            'px-6 py-2 rounded-full border transition-all',
+            activeFilter === category 
+              ? 'bg-orange-500 border-orange-500 text-white' 
+              : 'border-zinc-700 text-zinc-400 hover:border-orange-500 hover:text-orange-500'
+          ]"
+        >
+          {{ category }}
+        </button>
+      </div> -->
+      
       <!-- Product Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+       <div id="productSection" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <ProductCard 
           v-for="product in filteredProducts" 
           :key="product.id"
           :product="product"
-          @view-details="openProductModal"
+          @viewDetails="showProductDetails"
         />
       </div>
 
@@ -71,44 +89,39 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
-import ProductCard from '../shared/ProductCard.vue'
-import ProductModal from '../shared/ProductModal.vue'
-import { products } from '../../data/products.js'
+import { ref, computed, onMounted } from 'vue'
+import { products } from '@/data/products'
+import ProductCard from '@/components/shared/ProductCard.vue'
 
-const props = defineProps({
-  searchQuery: {
-    type: String,
-    default: ''
-  }
+const activeFilter = ref('Todos')
+const productDetails = ref(null)
+
+const categories = computed(() => {
+  const allCategories = ['Todos', ...new Set(products.map(product => product.category))]
+  return allCategories
 })
-
-const showProductModal = ref(false)
-const selectedProduct = ref(null)
-const showAdmin = ref(false)
 
 const filteredProducts = computed(() => {
-  if (!props.searchQuery) return products
-  
-  const query = props.searchQuery.toLowerCase()
-  return products.filter(product => 
-    product.name.toLowerCase().includes(query) ||
-    product.category.toLowerCase().includes(query) ||
-    product.description.toLowerCase().includes(query) ||
-    product.caliber.toLowerCase().includes(query)
-  )
+  if (activeFilter.value === 'Todos') {
+    return products
+  }
+  return products.filter(product => product.category === activeFilter.value)
 })
 
-const openProductModal = (product) => {
-  selectedProduct.value = product
-  showProductModal.value = true
+const setFilter = (category) => {
+  activeFilter.value = category
 }
 
-const closeProductModal = () => {
-  showProductModal.value = false
-  // Opcional: limpiar el producto seleccionado después de un delay
-  setTimeout(() => {
-    selectedProduct.value = null
-  }, 300)
+const showProductDetails = (product) => {
+  productDetails.value = product
 }
+
+// Exponer función para que Header pueda acceder
+defineExpose({
+  filteredProducts
+})
+
+onMounted(() => {
+  console.log('Productos cargados:', products)
+})
 </script>

@@ -1,59 +1,60 @@
 export let products = [
-    {
+  {
         id: 1,
-        name: 'Black kr19',
+        name: 'KR 9 Black ',
         category: 'Pistolas',
-        description: 'Pistola semiautomática de alta capacidad con diseño ergonómico',
-        image: '/products/kra9_black_Web.png',
-        price: 1000,
+        image: '/products/kr9.png',
         stock: 10,
         
         specs: {
       caliber: '9x19 mm',
       overallLength: '157 mm',
       height: '117.70 mm',
-      barrelLength: '81.5 mm',
+      barrelLength: '81.5mm',
       weight: '541 gr',
       rateOfFire: '700-900 rpm',
-      capacity: '7+1',
+      capacity: '7',
       system: 'Single-Action Trigger Hammer-Fired',
       weightEmptyMag: '480 gr',
       rateOfTwist: '1:10 w/6 grooves'
     },
-    features: [
-      'Gatillo de acción simple',
-      'Seguridad manual',
-      'Miras fijas',
-      'Empuñadura texturizada',
-      'Acabado negro resistente'
-    ]
+    
+},  
+  {
+        id: 2,
+        name: 'KRA 9 Black ',
+        category: 'Pistolas',
+        image: '/products/kra9_black_Web.png',
+        stock: 10,
+        
+        specs: {
+      caliber: '9x19 mm',
+      weight: '738.6 gr',
+      barrelLength: '4.70"',
+      rateOfFire: '700-900 rpm',
+      capacity: '15+1/18+1',
+      system: 'Single-Action Trigger Striker-Fired'           
+    },
+    
 },
 {
-    id:2,
-    name: 'Black kr19 PRO',
+    id:3,
+    name: 'KRA 9 PRO',
     category: 'Pistolas',
-    description: 'Pistola semiautomática de alta capacidad c',
     image: '/products/kra9_Black_pro_Web.png',
-    price: 1200,
     stock: 10,
     
     specs: {
       caliber: '9x19 mm',
+      weight: '681.8 gr',
       overallLength: '157 mm',
-      height: '',
-      barrelLength: '81.5 mm',
-      weight: '541 gr',
-      rateOfFire: '700-900 rpm',
-      capacity: '7+1',
-      system: 'Single-Action Trigger Hammer-Fired',
-      weightEmptyMag: '480 gr',
-      rateOfTwist: '1:10 w/6 grooves'
+      barrelLength: '4.48"',        
+      capacity: '15+1/18+1',
+      system: 'Single-Action Trigger Striker-Fired'
+      
     },
-    
-
-
-
 }
+
 
 ]
 

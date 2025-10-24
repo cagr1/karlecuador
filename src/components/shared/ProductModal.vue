@@ -38,7 +38,7 @@
                   Click para normal
                 </div>
               </div>
-              <div class="text-3xl font-bold text-orange-500 mt-4 text-center">${{ product.price }}</div>
+              
             </div>
 
             <!-- Especificaciones y características -->

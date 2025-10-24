@@ -25,7 +25,7 @@
         </nav>
 
         <!-- Search Icon -->
-        <button @click="showSearch = !showSearch" class="flex items-center gap-2 text-sm hover:text-orange-500 transition-colors">
+        <button @click="toggleSearch" class="flex items-center gap-2 text-sm hover:text-orange-500 transition-colors">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
           </svg>
@@ -43,18 +43,32 @@
 
       <!-- Search Bar -->
       <transition name="slide-down">
-        <div v-if="showSearch" class="mt-4 pb-2">
+        <div v-if="showSearch" class="mt-4 pb-2" ref="searchContainer">
           <div class="relative">
             <input 
+              ref="searchInput"
               v-model="searchQuery"
               type="text" 
               placeholder="Buscar productos..."
-              class="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-3 pl-12 text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500 transition-colors"
-              @input="$emit('search', searchQuery)"
+              class="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-3 pl-12 pr-10 text-white placeholder-zinc-500 focus:outline-none focus:border-orange-500 transition-colors"
+              @keyup.enter="performSearch"
+              @input="performSearch"
             >
+            <!-- Search Icon -->
             <svg class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
             </svg>
+            
+            <!-- Clear Button -->
+            <button 
+              v-if="searchQuery" 
+              @click="clearSearch"
+              class="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition-colors"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+              </svg>
+            </button>
           </div>
         </div>
       </transition>
@@ -72,13 +86,104 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 
 const showSearch = ref(false)
 const mobileMenuOpen = ref(false)
 const searchQuery = ref('')
+const searchContainer = ref(null)
+const searchInput = ref(null)
 
-defineEmits(['search'])
+// Función para buscar en las armas
+const performSearch = () => {
+  const searchTerm = searchQuery.value.toLowerCase().trim()
+  console.log('Buscando:', searchTerm) // Para debug
+  
+  // Buscar en todos los productos
+  const productCards = document.querySelectorAll('#productSection .bg-zinc-900')
+  
+  let foundResults = false
+  
+  productCards.forEach(card => {
+    // Buscar en el nombre del producto (dentro del h3)
+    const productName = card.querySelector('h3')?.textContent.toLowerCase() || ''
+    // Buscar en la categoría
+    const productCategory = card.querySelector('.text-xs.text-orange-500')?.textContent.toLowerCase() || ''
+    // Buscar en las especificaciones
+    const productSpecs = card.querySelectorAll('.text-white')
+    let specsText = ''
+    productSpecs.forEach(spec => {
+      specsText += spec.textContent.toLowerCase() + ' '
+    })
+    
+    const cardText = productName + ' ' + productCategory + ' ' + specsText
+    
+    console.log('Card text:', cardText) // Para debug
+    
+    // Mostrar/ocultar basado en la búsqueda
+    if (searchTerm === '' || cardText.includes(searchTerm)) {
+      card.style.display = 'block'
+      foundResults = true
+    } else {
+      card.style.display = 'none'
+    }
+  })
+  
+  // Opcional: Mostrar mensaje si no hay resultados
+  const noResultsMessage = document.getElementById('noResultsMessage')
+  if (noResultsMessage) {
+    noResultsMessage.style.display = foundResults || searchTerm === '' ? 'none' : 'block'
+  }
+}
+
+// Limpiar búsqueda
+const clearSearch = () => {
+  searchQuery.value = ''
+  performSearch()
+  searchInput.value?.focus()
+}
+
+// Alternar búsqueda
+const toggleSearch = () => {
+  showSearch.value = !showSearch.value
+  if (showSearch.value) {
+    setTimeout(() => {
+      searchInput.value?.focus()
+    }, 100)
+  } else {
+    clearSearch()
+  }
+}
+
+// Cerrar al hacer clic fuera
+const handleClickOutside = (event) => {
+  if (showSearch.value && 
+      searchContainer.value && 
+      !searchContainer.value.contains(event.target) &&
+      !event.target.closest('button')) {
+    showSearch.value = false
+    // No limpiar la búsqueda aquí para mantener los resultados
+  }
+}
+
+// Cerrar al presionar ESC
+const handleEscape = (event) => {
+  if (event.key === 'Escape' && showSearch.value) {
+    showSearch.value = false
+  }
+}
+
+// Agregar event listeners
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+  document.addEventListener('keydown', handleEscape)
+})
+
+// Limpiar event listeners
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+  document.removeEventListener('keydown', handleEscape)
+})
 </script>
 
 <style scoped>
